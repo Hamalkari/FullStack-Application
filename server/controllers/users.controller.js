@@ -2,7 +2,6 @@ const User = require('../models/users.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-
 exports.users_create = (req,res) => {
   const userData = {
     first_name: req.body.first_name,
@@ -21,14 +20,14 @@ exports.users_create = (req,res) => {
         userData.password = hash;
         User.create(userData)
                   .then(user => {
-                    res.json({status: `${user.email} registered`})
+                    res.json({status: "success",title: "Поздравляем! Вы успешно создали аккаунт"});
                   })
                   .catch(err => {
                     res.send(`Error - ${err}`);
                   })
       })
     }else{
-      res.json({error: "User already exists"})
+      res.json({status: 'error', title: "Пользователь с таким ящиком уже существует!!!"});
     }
   })
   .catch(err => {
@@ -54,12 +53,12 @@ exports.users_login = (req,res) => {
           expiresIn: 1440
         });
 
-        res.send(token);
+        res.json({status: "success",token});
       }else{
-        res.json({error: 'User does not exist'});
+        res.json({status: "error",title: 'Неправильный логин или пароль'});
       }
     }else{
-      res.json({error: 'User does not exist'});
+      res.json({status: "error", title: 'Неправильный логин или пароль'});
     }
   })
   .catch(err => {

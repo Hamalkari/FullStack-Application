@@ -31,7 +31,7 @@
                 .md-layout-item
                   md-field(:class="{'md-invalid' : $v.form.password.$error}")
                     label(for="password") Пароль
-                    md-input(name='password' id="password" type="password" v-model.trim="form.password" @change="$v.form.passwort.$touch()")
+                    md-input(name='password' id="password" type="password" v-model.trim="form.password" @change="$v.form.password.$touch()")
                     span.md-error(v-if="!$v.form.password.required") Обязательное поле
                     span.md-error(v-if="!$v.form.password.minLength") Пароль должен состоять как минимум из {{ $v.form.password.$params.minLength.min}} символов
               .md-layout
@@ -48,7 +48,7 @@
 <script>
 
 import {required,email,sameAs,minLength} from 'vuelidate/lib/validators'
-
+import UserService from '@/service/users.service'
   export default {
     name: 'Form',
     data() {
@@ -102,14 +102,35 @@ import {required,email,sameAs,minLength} from 'vuelidate/lib/validators'
       },
       createUser(){
         if (!this.validateUser()){
-          this.$notify({
-            group: "auth",
-            type: 'success',
-            title: "Поздравляю! Вы успешно создали аккаунт",
-            duration: 5000,
-            speed: 1000
-          })
-          this.clearForm();
+          const payload = { 
+            first_name: this.form.firstName,
+            last_name: this.form.lastName,
+            email: this.form.email,
+            password: this.form.password
+          };
+          UserService.createUser(payload)
+            .then(res => {
+              const data = res.data;
+              this.$notify({
+                group: 'auth',
+                type: data.status,
+                title: data.title,
+                duration: 4000,
+                speed: 1000,
+              });
+              if (data.status == 'success'){
+                this.clearForm();
+              }
+            })
+            .catch(err => {
+              this.$notify({
+                group: 'auth',
+                type: 'error',
+                title: err,
+                duration: 4000,
+                speed: 1000
+              });
+            })
         }
       }
     }

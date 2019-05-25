@@ -1,6 +1,6 @@
 <template lang="pug">
   #app
-    notifications(group="auth" position="bottom center")
+    notifications(group="auth" position="bottom center" width="500px")
     compNavBar
     router-view
 </template>

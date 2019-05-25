@@ -1,9 +1,11 @@
 const express = require('express');
 const users = express.Router();
+const cors = require('cors');
+
+users.use(cors());
 
 
-
-const users_controller = require('../controllers/users.controlle');
+const users_controller = require('../controllers/users.controller');
 
 process.env.SECRET_KEY = 'secret'; 
 

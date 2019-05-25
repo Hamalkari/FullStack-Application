@@ -27,6 +27,7 @@
 
 <script>
   import {email,required,minLength} from 'vuelidate/lib/validators'
+  import UserService from '@/service/users.service';
   export default {
     data() {
       return {
@@ -57,7 +58,26 @@
       },
       singinUser(){
         if (!this.validationUser()){
-          this.clearForm();
+          const payload = {
+            email: this.email,
+            password: this.password
+          };
+          UserService.loginUser(payload)
+                .then(res => {
+                  const data = res.data;
+                  if (data.status == "error"){
+                    this.$notify({
+                      group: "auth",
+                      type: data.status,
+                      title: data.title,
+                      duration: 4000,
+                      speed: 1000
+                    });
+                  }else{
+                    localStorage.setItem('usertoken',data.token);
+                    this.clearForm();
+                  }
+                });
         }
       }
     },
