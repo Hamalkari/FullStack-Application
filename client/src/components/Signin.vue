@@ -1,14 +1,11 @@
 <template lang="pug">
-  #login
-    compLogin
+  section.signin
+    h1 войти
 </template>
 
 <script>
-  import compLogin from '@/components/Signin';
   export default {
-    components: {
-      compLogin
-    }
+    
   }
 </script>
 

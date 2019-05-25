@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router';
 
 // подключаем дизайн для нашего приложения
-import { MdButton, MdContent, MdTabs } from 'vue-material/dist/components'
+import { MdButton, MdCard, MdField,MdProgress,MdSnackbar} from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 
@@ -12,8 +12,10 @@ import Vuelidate from 'vuelidate';
 
 
 Vue.use(MdButton);
-Vue.use(MdContent);
-Vue.use(MdTabs);
+Vue.use(MdCard);
+Vue.use(MdProgress);
+Vue.use(MdField);
+Vue.use(MdSnackbar);
 Vue.use(Vuelidate);
 
 Vue.config.productionTip = false

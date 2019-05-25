@@ -1,12 +1,14 @@
 <template lang="pug">
-  .register
-    h1 Register view
+  #register
+    compRegister
 </template>
 
 <script>
-
+  import compRegister from '@/components/Reg';
   export default {
-    
+    components: {
+      compRegister
+    }
   }
 </script>
 
