@@ -43,8 +43,6 @@
             md-progress-bar.form__progress(md-mode="indeterminate" v-if="sending")
             md-card-actions
               md-button.form__submit(type="submit" class="md-raised md-accent") Создать аккаунт
-          md-snackbar(:md-active.sync="userSaved") Пользователь {{ lastUser }} был успешно создан 
-
 </template>
 
 <script>
@@ -63,8 +61,6 @@ import {required,email,sameAs,minLength} from 'vuelidate/lib/validators'
           repeatPassword: null
         },
         sending: false,
-        userSaved: false,
-        lastUser: null
       }
     },
     validations: {
@@ -106,6 +102,13 @@ import {required,email,sameAs,minLength} from 'vuelidate/lib/validators'
       },
       createUser(){
         if (!this.validateUser()){
+          this.$notify({
+            group: "auth",
+            type: 'success',
+            title: "Поздравляю! Вы успешно создали аккаунт",
+            duration: 5000,
+            speed: 1000
+          })
           this.clearForm();
         }
       }

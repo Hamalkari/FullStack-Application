@@ -9,6 +9,7 @@ import 'vue-material/dist/theme/default.css'
 
 // подключаем доп библиотеки
 import Vuelidate from 'vuelidate';
+import Notifications from 'vue-notification'
 
 
 Vue.use(MdButton);
@@ -16,7 +17,9 @@ Vue.use(MdCard);
 Vue.use(MdProgress);
 Vue.use(MdField);
 Vue.use(MdSnackbar);
+
 Vue.use(Vuelidate);
+Vue.use(Notifications);
 
 Vue.config.productionTip = false
 
