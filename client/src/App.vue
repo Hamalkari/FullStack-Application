@@ -1,6 +1,7 @@
 <template lang="pug">
   #app
     compNavBar
+    router-view
 </template>
 
 <script>
@@ -15,6 +16,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import './assets/style.scss';
+@import '@/assets/style.scss';
 
 </style>
