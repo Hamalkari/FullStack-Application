@@ -11,6 +11,6 @@ process.env.SECRET_KEY = 'secret';
 
 users.post('/register',users_controller.users_create);
 users.post('/login',users_controller.users_login);
-
+users.get('/',users_controller.users_get);
 
 module.exports = users;

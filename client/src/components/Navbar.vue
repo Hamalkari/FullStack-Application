@@ -2,7 +2,7 @@
   header.header
     .container
       .header-wrapper
-        .header__logo: img(:src="logo" alt="Логотип")
+        router-link(to="/").header__logo: img(:src="logo" alt="Логотип")
         nav.nav
           ul.menu 
             li.menu__item(v-for="(link,i) in links" :key="i")

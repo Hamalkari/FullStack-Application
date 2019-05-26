@@ -11,6 +11,9 @@ class UserService{
   static loginUser(payload){
     return axios.post(`${url}/login`,payload);
   }
+  static getUsers(){
+    return axios.get(url);
+  }
 }
 
 export default UserService;

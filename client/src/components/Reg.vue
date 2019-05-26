@@ -17,7 +17,7 @@
                 .md-layout-item
                   md-field(:class="{ 'md-invalid' : $v.form.lastName.$error}")
                     label(for="last-name") Фамилия
-                    md-input(name='last-name' id="last-name" v-model.trim="form.lastName" @cnahge="$v.form.lastName.$touch()")
+                    md-input(name='last-name' id="last-name" v-model.trim="form.lastName" @change="$v.form.lastName.$touch()")
                     span.md-error(v-if="!$v.form.lastName.required") Обязательное поле
                     span.md-error(v-if="!$v.form.lastName.minLength") Имя должно быть более {{ $v.form.lastName.$params.minLength.min }} символов
               .md-layout

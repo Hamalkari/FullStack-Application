@@ -1,11 +1,14 @@
 <template lang="pug">
-  .users
-    h1 Users view
+  #users
+    compUsers
 </template>
 
 <script>
+  import compUsers from '@/components/UsersTable';
   export default {
-    
+    components: {
+      compUsers
+    }
   }
 </script>
 
