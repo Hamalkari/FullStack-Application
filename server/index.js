@@ -12,7 +12,7 @@ const mongoURI = "mongodb+srv://halmakari:100420rub@datab-0fd4c.mongodb.net/Pizz
 
 mongoose.connect(mongoURI,{useNewUrlParser: true})
         .then(() => {
-          console.log("MongoDb COnnected");
+          console.log("MongoDb Connected");
         })
         .catch(err => {
           console.log(`Error - ${err}`);

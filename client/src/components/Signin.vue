@@ -27,7 +27,9 @@
 
 <script>
   import {email,required,minLength} from 'vuelidate/lib/validators'
-  import UserService from '@/service/users.service';
+  import router from '@/router'
+  import UserService from '@/service/users.service'
+  import EventBus from '@/components/EventBus'
   export default {
     data() {
       return {
@@ -76,9 +78,14 @@
                   }else{
                     localStorage.setItem('usertoken',data.token);
                     this.clearForm();
+                    this.emitMethod();
+                    router.push({name: 'home'});
                   }
                 });
         }
+      },
+      emitMethod(){
+        EventBus.$emit('logged-in',true);
       }
     },
   }

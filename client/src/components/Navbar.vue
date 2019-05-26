@@ -5,26 +5,42 @@
         router-link(to="/").header__logo: img(:src="logo" alt="Логотип")
         nav.nav
           ul.menu 
-            li.menu__item(v-for="(link,i) in links" :key="i")
-              router-link(:to="link.url" tag="md-button" exact-active-class="md-raised md-accent").menu__link {{ link.title }}
+            li.menu__item
+              router-link(to="/" tag="md-button" exact-active-class="md-raised md-accent").menu__link Главная
+            li.menu__item(v-if="!auth")
+              router-link(to="/registration" tag="md-button" exact-active-class="md-raised md-accent").menu__link Регистрация
+            li.menu__item(v-if='auth')
+              md-button(@click="logout") Выйти
+            li.menu__item(v-if="!auth")
+              router-link(to="/login" tag="md-button" exact-active-class="md-raised md-accent").menu__link Войти
+            li.menu__item
+              router-link(to="/users" tag="md-button" exact-active-class="md-raised md-accent").menu__link Таблица пользователей
             
 </template>
 
 <script>
 import LogoIcon from '@/assets/images/logo.png'; 
+import EventBus from '@/components/EventBus';
 
   export default {
     name: 'navbar',
     data() {
       return {
         logo: LogoIcon,
-        links:[
-          {title: "Главная",url: '/'},
-          {title: "Регистрация", url: "/registration"},
-          {title: "Войти",url: "/login"},
-          {title: "Таблица Пользователей", url: "/users"}
-        ]
+        auth: false
       }
+    },
+
+    methods: {
+      logout(){
+        localStorage.removeItem('usertoken');
+        EventBus.$emit('logged-in',false);
+      }
+    },
+    mounted() {
+      EventBus.$on('logged-in',status => {
+        this.auth = status;
+      })
     },
   }
 </script>
@@ -47,7 +63,10 @@ import LogoIcon from '@/assets/images/logo.png';
   &__item:last-child{
     margin-right: 0;
   }
-  
+  &__link{
+    color: #000;
+    text-decoration: none;
+  }
 }
 
 
