@@ -1,78 +1,59 @@
-const User = require('../models/users.model');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const User = require("../models/users.model");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const config = require("../config");
 
-exports.users_create = (req,res) => {
-  const userData = {
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
-    email: req.body.email,
-    password: req.body.password
-  };
-
-
-  User.findOne({
-    email: req.body.email
-  })
-  .then(user => {
-    if (!user){
-      bcrypt.hash(req.body.password,10,(err,hash) => {
-        userData.password = hash;
-        User.create(userData)
-                  .then(user => {
-                    res.json({status: "success",title: "Поздравляем! Вы успешно создали аккаунт"});
-                  })
-                  .catch(err => {
-                    res.send(`Error - ${err}`);
-                  })
-      })
-    }else{
-      res.json({status: 'error', title: "Пользователь с таким ящиком уже существует!!!"});
-    }
-  })
-  .catch(err => {
-    res.send(`Error - ${err}`);
-  })
-}
-
-exports.users_login = (req,res) => {
-  User.findOne({
-    email: req.body.email
-  })
-  .then(user => {
-    if (user){
-      if (bcrypt.compareSync(req.body.password,user.password)){
-        const payload = {
-          _id: user._id,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          email: user.email
-        };
-
-        let token = jwt.sign(payload,process.env.SECRET_KEY,{
-          expiresIn: 1440
-        });
-
-        res.json({status: "success",token});
-      }else{
-        res.json({status: "error",title: 'Неправильный логин или пароль'});
-      }
-    }else{
-      res.json({status: "error", title: 'Неправильный логин или пароль'});
-    }
-  })
-  .catch(err => {
-    res.send(`error - ${err}`);
+const signToken = user => {
+  return jwt.sign({ _id: user.id }, config.secretKey, {
+    expiresIn: "24h"
   });
-}
+};
 
+module.exports = {
+  users_create: async (req, res) => {
+    try {
+      // Получить данные с POST запроса
+      const { first_name, last_name, email, password } = req.body;
 
-exports.users_get = (req,res) => {
-  User.find({})
-        .then(users => {
-          res.send(users);
-        })
-        .catch(err => {
-          res.send(`Error: ${err}`);
-        })
-}
+      // Пытаемся найти пользователя с таким ящиком
+      const foundUser = await User.findOne({ email });
+      if (foundUser) {
+        res.json({
+          status: "error",
+          title: "Пользователь с таким ящиком уже существует"
+        });
+      } else {
+        const newUser = new User({ first_name, last_name, email, password });
+        await newUser.save();
+        res
+          .status(201)
+          .json({ status: "success", title: "Пользователь успешно создан" });
+      }
+    } catch (error) {
+      res.json({ status: "error", title: `${error}` });
+    }
+  },
+  users_login: async (req, res) => {
+    try {
+      const token = signToken(req.user);
+      res.status(200).json({ token });
+    } catch (error) {
+      res.json({ status: "error", title: `${error}` });
+    }
+  },
+  users_getUsers: async (req, res) => {
+    try {
+      const users = await User.find({});
+      res.send(users);
+    } catch (error) {
+      res.json({ status: "error", title: `${error}` });
+    }
+  },
+  users_getUser: async (req, res) => {
+    try {
+      res.send(req.user);
+    } catch (error) {
+      console.log(`${error}`);
+    }
+  }
+};

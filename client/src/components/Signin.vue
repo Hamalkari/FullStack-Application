@@ -26,80 +26,78 @@
 </template>
 
 <script>
-  import {email,required,minLength} from 'vuelidate/lib/validators'
-  import router from '@/router'
-  import UserService from '@/service/users.service'
-  import EventBus from '@/components/EventBus'
-  export default {
-    data() {
-      return {
-        email: null,
-        password: null
-      }
+import { email, required, minLength } from "vuelidate/lib/validators";
+import router from "@/router";
+import UserService from "@/service/users.service";
+import EventBus from "@/components/EventBus";
+export default {
+  data() {
+    return {
+      email: null,
+      password: null
+    };
+  },
+  validations: {
+    email: {
+      required,
+      email
     },
-    validations: {
-      email: {
-        required,
-        email
-      },
-      password: {
-        required,
-        minLength: minLength(6)
-      }
+    password: {
+      required,
+      minLength: minLength(6)
+    }
+  },
+  methods: {
+    clearForm() {
+      this.$v.$reset();
+      this.email = null;
+      this.password = null;
     },
-    methods: {
-      clearForm(){
-        this.$v.$reset();
-        this.email = null;
-        this.password = null;
-      },
-      validationUser(){
-        this.$v.$touch();
+    validationUser() {
+      this.$v.$touch();
 
-        return this.$v.$invalid;
-      },
-      singinUser(){
-        if (!this.validationUser()){
-          const payload = {
-            email: this.email,
-            password: this.password
-          };
-          UserService.loginUser(payload)
-                .then(res => {
-                  const data = res.data;
-                  if (data.status == "error"){
-                    this.$notify({
-                      group: "auth",
-                      type: data.status,
-                      title: data.title,
-                      duration: 4000,
-                      speed: 1000
-                    });
-                  }else{
-                    localStorage.setItem('usertoken',data.token);
-                    this.clearForm();
-                    this.emitMethod();
-                    router.push({name: 'home'});
-                  }
-                });
-        }
-      },
-      emitMethod(){
-        EventBus.$emit('logged-in',true);
+      return this.$v.$invalid;
+    },
+    singinUser() {
+      if (!this.validationUser()) {
+        const payload = {
+          email: this.email,
+          password: this.password
+        };
+        UserService.loginUser(payload).then(res => {
+          const data = res.data;
+          if (data.status == "error") {
+            this.$notify({
+              group: "auth",
+              type: data.status,
+              title: data.title,
+              duration: 4000,
+              speed: 1000
+            });
+          } else {
+            localStorage.setItem("usertoken", data.token);
+            this.clearForm();
+            this.emitMethod();
+            router.push({ name: "home" });
+          }
+        });
       }
     },
+    emitMethod() {
+      EventBus.$emit("logged-in", true);
+    }
   }
+};
 </script>
 
 <style lang="scss" scoped>
-
-.signin-wrapper{
+.signin-wrapper {
   height: 70vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.form{
+.form {
   width: 50%;
 }
 </style>
